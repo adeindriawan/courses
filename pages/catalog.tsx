@@ -1,14 +1,18 @@
 import * as React from 'react';
-import Container from '@mui/material/Container'
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { 
+  Box,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Grid,
+  Typography
+ } from '@mui/material';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import Header from '../components/Header';
 import CourseCard from '../components/CourseCard';
-import { useGetCoursesQuery } from '../stores/api'
+import { useGetCoursesQuery } from '../stores/api';
+// import { Course } from '../stores/course';
 
 function Copyright() {
   return (
@@ -33,8 +37,28 @@ export default function Album() {
     { title: 'Courses', url: '/catalog' },
     { title: 'About', url: '/about' },
   ];
-  const { data, isLoading, error } = useGetCoursesQuery();
-  console.log(data);
+  const { 
+    data,
+    isLoading,
+    isError,
+    isSuccess,
+    error 
+  } = useGetCoursesQuery();
+  
+  let content;
+
+  if (isLoading) {
+    content = <CircularProgress />
+  } else if (isSuccess) {
+    content = data.map((c) => (
+      <Grid item key={c.id} xs={12} sm={6} md={4}>
+        <CourseCard id={c.id} name={c.name} image={c.image} />
+      </Grid>
+    ))
+  } else if (isError) {
+    content = <div>{error.toString()}</div>
+  }
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -45,11 +69,12 @@ export default function Album() {
           <Container sx={{ py: 8 }} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {cards.map((card) => (
+              {/* {cards.map((card) => (
                 <Grid item key={card} xs={12} sm={6} md={4}>
                   <CourseCard id={card} />
                 </Grid>
-              ))}
+              ))} */}
+              {content}
             </Grid>
           </Container>
         </main>

@@ -37,7 +37,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   })
 }));
 
-export default function CourseCard({ id }: { id: number}) {
+export default function CourseCard({ id, name, image }: { id: number, name: string, image: string }) {
   const [expanded, setExpanded] = React.useState(false);
   const [openFeedback, setOpenFeedback] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
@@ -130,12 +130,12 @@ export default function CourseCard({ id }: { id: number}) {
           // 16:9
           pt: '56.25%',
         }}
-        image="https://source.unsplash.com/random"
+        image={`http://academy.beta/images/course/${image}`}
         alt="random"
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography gutterBottom variant="h5" component="h2">
-          Heading
+          {name}
         </Typography>
         <Typography>
           This is a media card. You can use this section to describe the
