@@ -21,8 +21,12 @@ import {
   styled
 } from '@mui/material/styles'
 
+import { baseURL } from '../config'
+
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean
+  expand: boolean,
+  onClick: React.MouseEventHandler<HTMLElement>,
+  children: React.ReactNode
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
@@ -130,7 +134,7 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
           // 16:9
           pt: '56.25%',
         }}
-        image={`http://academy.beta/images/course/${image}`}
+        image={`${baseURL}images/course/${image}`}
         alt="random"
       />
       <CardContent sx={{ flexGrow: 1 }}>
