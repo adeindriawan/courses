@@ -2,12 +2,16 @@ import { combineReducers, configureStore, MiddlewareArray } from '@reduxjs/toolk
 import { app } from './app'
 import { auth } from './auth'
 import { course } from './course'
+import { favorite } from './favorite'
+import { cart } from './cart'
 import { api } from './api'
 
 const reducers = combineReducers({
   app,
   auth,
   course,
+  favorite,
+  cart,
   [api.reducerPath]: api.reducer
 })
 

@@ -12,7 +12,6 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import Header from '../components/Header';
 import CourseCard from '../components/CourseCard';
 import { useGetCoursesQuery } from '../stores/api';
-// import { Course } from '../stores/course';
 
 function Copyright() {
   return (

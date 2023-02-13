@@ -14,14 +14,18 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import {
   FavoriteBorder as FavoriteBorderIcon,
   ShoppingCart as ShoppingCartIcon,
+  RemoveShoppingCart as RemoveShoppingCartIcon,
   ExpandMore as ExpandMoreIcon,
   Close as CloseIcon,
 } from '@mui/icons-material'
 import {
   styled
 } from '@mui/material/styles'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../stores'
 import { baseURL } from '../config'
+import { addCart } from '../stores/cart'
+import { useGetCoursesQuery } from '../stores/api'
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean,
@@ -45,6 +49,10 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
   const [expanded, setExpanded] = React.useState(false);
   const [openFeedback, setOpenFeedback] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
+  const { data } = useGetCoursesQuery();
+  const cart = useSelector((state: RootState) => state.cart)
+  const courses = data ?? [];
+  const dispatch = useDispatch();
 
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -69,14 +77,30 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
       </IconButton>
     </React.Fragment>
   );
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  const handleCartClick = (id: number) => {
-    console.log(`course id ${id} added to cart`);
+
+  const handleAddToCartClick = (id: number) => {
+    const selectedCourse = courses.filter(course => {
+      return course.id === id;
+    });
+    dispatch(addCart(selectedCourse[0]));
     setFeedbackMessage("Added to cart")
     setOpenFeedback(true)
   };
+
+  const isCourseInCart = (id: number) => {
+    const doesExist = cart.find(item => item.id === id);
+
+    return doesExist;
+  };
+
+  const handleRemoveFromCartClick = (id: number) => {
+    console.log(id);
+  };
+
   const handleFavoriteClick = (id: number) => {
     console.log(`course id ${id} added to favorite`);
     setFeedbackMessage("Added to favorite")
@@ -85,11 +109,19 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
 
   const CartButton = React.forwardRef(function CartButton(props, ref) {
     return (
-      <IconButton onClick={ () => handleCartClick(id) }>
-        <ShoppingCartIcon aria-label="Add to whishlist" />
+      <IconButton onClick={ () => handleAddToCartClick(id) }>
+        <ShoppingCartIcon aria-label="Add to cart" />
       </IconButton>
     )
   });
+
+  const RemoveCartButton = React.forwardRef(function RemoveCartButton(props, ref) {
+    return (
+      <IconButton onClick={ () => handleRemoveFromCartClick(id) }>
+        <RemoveShoppingCartIcon aria-label="Remove from cart" />
+      </IconButton>
+    )
+  })
 
   const FavoriteButton = React.forwardRef(function FavoriteButton(props, ref) {
     return (
@@ -150,9 +182,15 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
         <Tooltip title="Add to wishlist">
           <FavoriteButton />
         </Tooltip>
-        <Tooltip title="Add to cart">
-          <CartButton />
-        </Tooltip>
+        {
+          isCourseInCart(id) ?
+            <Tooltip title="Remove from cart">
+              <RemoveCartButton />
+            </Tooltip> :
+            <Tooltip title="Add to cart">
+              <CartButton />
+            </Tooltip>
+        }
         <Tooltip title="Read details">
           <ExpandMoreButton />
         </Tooltip>
