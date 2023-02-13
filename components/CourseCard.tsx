@@ -24,7 +24,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../stores'
 import { baseURL } from '../config'
-import { addCart } from '../stores/cart'
+import { addCart, updateCart } from '../stores/cart'
 import { useGetCoursesQuery } from '../stores/api'
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -98,7 +98,9 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
   };
 
   const handleRemoveFromCartClick = (id: number) => {
-    console.log(id);
+    dispatch(updateCart(id));
+    setFeedbackMessage("Removed from cart")
+    setOpenFeedback(true)
   };
 
   const handleFavoriteClick = (id: number) => {
