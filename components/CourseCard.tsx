@@ -13,6 +13,7 @@ import {
 import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import {
   FavoriteBorder as FavoriteBorderIcon,
+  Favorite as FavoriteIcon,
   ShoppingCart as ShoppingCartIcon,
   RemoveShoppingCart as RemoveShoppingCartIcon,
   ExpandMore as ExpandMoreIcon,
@@ -24,7 +25,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../stores'
 import { baseURL } from '../config'
-import { addCart, updateCart } from '../stores/cart'
+import { addToCart, removeFromCart } from '../stores/cart'
+import { addToFavorite, removeFromFavorite } from '../stores/favorite'
 import { useGetCoursesQuery } from '../stores/api'
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -50,7 +52,8 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
   const [openFeedback, setOpenFeedback] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
   const { data } = useGetCoursesQuery();
-  const cart = useSelector((state: RootState) => state.cart)
+  const cart = useSelector((state: RootState) => state.cart);
+  const favorite = useSelector((state: RootState) => state.favorite);
   const courses = data ?? [];
   const dispatch = useDispatch();
 
@@ -86,7 +89,7 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
     const selectedCourse = courses.filter(course => {
       return course.id === id;
     });
-    dispatch(addCart(selectedCourse[0]));
+    dispatch(addToCart(selectedCourse[0]));
     setFeedbackMessage("Added to cart")
     setOpenFeedback(true)
   };
@@ -97,15 +100,30 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
     return doesExist;
   };
 
+  const isCourseInFavorite = (id: number) => {
+    const doesExist = favorite.find(item => item.id === id);
+
+    return doesExist;
+  };
+
   const handleRemoveFromCartClick = (id: number) => {
-    dispatch(updateCart(id));
+    dispatch(removeFromCart(id));
     setFeedbackMessage("Removed from cart")
     setOpenFeedback(true)
   };
 
-  const handleFavoriteClick = (id: number) => {
-    console.log(`course id ${id} added to favorite`);
+  const handleAddToFavoriteClick = (id: number) => {
+    const selectedCourse = courses.filter(course => {
+      return course.id === id;
+    });
+    dispatch(addToFavorite(selectedCourse[0]))
     setFeedbackMessage("Added to favorite")
+    setOpenFeedback(true)
+  };
+
+  const handleRemoveFromFavoriteClick = (id: number) => {
+    dispatch(removeFromFavorite(id))
+    setFeedbackMessage("Removed from favorite")
     setOpenFeedback(true)
   };
 
@@ -127,8 +145,16 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
 
   const FavoriteButton = React.forwardRef(function FavoriteButton(props, ref) {
     return (
-      <IconButton onClick={ () => handleFavoriteClick(id) }>
+      <IconButton onClick={ () => handleAddToFavoriteClick(id) }>
         <FavoriteBorderIcon aria-label="Add to whishlist" />
+      </IconButton>
+    )
+  });
+
+  const RemoveFavoriteButton = React.forwardRef(function RemoveFavoriteButton(props, ref) {
+    return (
+      <IconButton onClick={ () => handleRemoveFromFavoriteClick(id) }>
+        <FavoriteIcon aria-label="Remove from whishlist" />
       </IconButton>
     )
   });
@@ -181,9 +207,15 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
         </Typography>
       </CardContent>
       <CardActions>
-        <Tooltip title="Add to wishlist">
-          <FavoriteButton />
-        </Tooltip>
+        {
+          isCourseInFavorite(id) ?
+            <Tooltip title="Remove from favorites">
+              <RemoveFavoriteButton />
+            </Tooltip> :
+            <Tooltip title="Add to favorites">
+              <FavoriteButton />
+            </Tooltip>
+        }
         {
           isCourseInCart(id) ?
             <Tooltip title="Remove from cart">

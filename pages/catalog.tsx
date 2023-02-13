@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import Header from '../components/Header';
 import CourseCard from '../components/CourseCard';
 import { useGetCoursesQuery } from '../stores/api';
+import { Course } from '../stores/course';
 
 function Copyright() {
   return (
@@ -49,7 +50,7 @@ export default function Album() {
   if (isLoading) {
     content = <CircularProgress />
   } else if (isSuccess) {
-    content = data.map((c) => (
+    content = data.map((c: Course) => (
       <Grid item key={c.id} xs={12} sm={6} md={4}>
         <CourseCard id={c.id} name={c.name} image={c.image} />
       </Grid>
