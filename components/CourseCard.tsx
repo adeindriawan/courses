@@ -28,6 +28,7 @@ import { baseURL } from '../config'
 import { addToCart, removeFromCart } from '../stores/cart'
 import { addToFavorite, removeFromFavorite } from '../stores/favorite'
 import { useGetCoursesQuery } from '../stores/api'
+import { useRouter } from 'next/router'
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean,
@@ -53,9 +54,11 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
   const { data } = useGetCoursesQuery();
   const cart = useSelector((state: RootState) => state.cart);
+  const isAuthenticated = useSelector((state: RootState) => state.app.authenticated);
   const favorite = useSelector((state: RootState) => state.favorite);
   const courses = data ?? [];
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -86,12 +89,16 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
   };
 
   const handleAddToCartClick = (id: number) => {
-    const selectedCourse = courses.filter(course => {
-      return course.id === id;
-    });
-    dispatch(addToCart(selectedCourse[0]));
-    setFeedbackMessage("Added to cart")
-    setOpenFeedback(true)
+    if (isAuthenticated) {
+      const selectedCourse = courses.filter(course => {
+        return course.id === id;
+      });
+      dispatch(addToCart(selectedCourse[0]));
+      setFeedbackMessage("Added to cart")
+      setOpenFeedback(true)
+    } else {
+      router.push('/signin')
+    }
   };
 
   const isCourseInCart = (id: number) => {

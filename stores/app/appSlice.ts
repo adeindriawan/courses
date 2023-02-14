@@ -1,15 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Course } from '../course';
+import { api } from '../api';
+
+export interface User {
+  id: number,
+  fname: string,
+  lname: string,
+  email: string,
+  avatar_url: string
+}
 
 export interface App {
   isLoading: boolean,
-  cart: Array<Course>
+  authenticated: boolean,
+  user: User,
+  token: string
 }
 
 const initialState: App = {
   isLoading: false,
-  cart: []
+  authenticated: false,
+  user: {
+    id: 0,
+    fname: '',
+    lname: '',
+    email: '',
+    avatar_url: 'https://avatars.githubusercontent.com/u/23217542?v=4'
+  },
+  token: ""
 };
 
 const appSlice = createSlice({
@@ -19,15 +37,31 @@ const appSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    addToCart: (state, action: PayloadAction<Course>) => {
-      state.cart.push(action.payload);
+    logIn: (state, action: PayloadAction<boolean>) => {
+      state.authenticated = action.payload;
     },
-    updateCart: (state, action: PayloadAction<Array<Course>>) => {
-      state.cart = action.payload;
+    logOut: (state, action: PayloadAction<boolean>) => {
+      state.authenticated = action.payload;
+    },
+    updateUser: (state, action: PayloadAction<User>) => {
+      state.user.id = action.payload.id;
+      state.user.fname = action.payload.fname;
+      state.user.lname = action.payload.lname;
+      state.user.email = action.payload.email;
     }
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      api.endpoints.login.matchFulfilled,
+      (state, { payload }) => {
+        state.token = payload.data.auth.accessToken;
+        state.authenticated = true;
+        state.user = payload.data.user;
+      }
+    )
   }
 });
 
-export const { setLoading, addToCart, updateCart } = appSlice.actions;
+export const { setLoading, logIn, logOut, updateUser } = appSlice.actions;
 
 export default appSlice.reducer;

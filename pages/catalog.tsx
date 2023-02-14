@@ -7,8 +7,8 @@ import {
   Grid,
   Typography
  } from '@mui/material';
-import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import Link from 'next/link';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../components/Header';
 import CourseCard from '../components/CourseCard';
 import { useGetCoursesQuery } from '../stores/api';
@@ -27,15 +27,14 @@ function Copyright() {
   );
 }
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 const theme = createTheme();
 
-export default function Album() {
+export default function Catalog() {
   const sections = [
     { title: 'Home', url: '/' },
     { title: 'Courses', url: '/catalog' },
     { title: 'About', url: '/about' },
+    { title: 'Cart', url: '/cart' },
   ];
   const { 
     data,
@@ -69,11 +68,6 @@ export default function Album() {
           <Container sx={{ py: 8 }} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {/* {cards.map((card) => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
-                  <CourseCard id={card} />
-                </Grid>
-              ))} */}
               {content}
             </Grid>
           </Container>

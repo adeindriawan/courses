@@ -11,7 +11,7 @@ export const api = createApi({
     prepareHeaders: (headers, { getState }) => {
       // Get token from store (userSlice)
       const state = getState() as RootState;
-      const token = state.auth.token;
+      const token = state.app.token;
 
       // Add token to headers
       if (token) {

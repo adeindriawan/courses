@@ -36,7 +36,7 @@ export default function Header(props: HeaderProps) {
         >
           {title}
         </Typography>
-        <IconButton href="/checkout">
+        <IconButton sx={{ marginRight: 5 }} href="/checkout">
           <ShoppingCartIcon />
         </IconButton>
         <Button variant="outlined" size="small">
