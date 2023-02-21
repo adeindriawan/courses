@@ -39,7 +39,7 @@ export default function UserInfo() {
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <TextField
             disabled
             id="email"
@@ -51,14 +51,16 @@ export default function UserInfo() {
             variant="outlined"
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <TextField
+            disabled
             id="phone"
             name="phone"
             label="Phone"
             fullWidth
             autoComplete="phone"
-            variant="standard"
+            value={user.phone}
+            variant="outlined"
           />
         </Grid>
       </Grid>

@@ -8,8 +8,17 @@ import {
   RadioGroup,
   Typography
 } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { setBank } from '../stores/app';
 
 export default function PaymentForm() {
+  const dispatch = useDispatch();
+  const [value, setValue] = React.useState('');
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const bank = (event.target as HTMLInputElement).value;
+    setValue(bank);
+    dispatch(setBank(bank));
+  }
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -21,12 +30,15 @@ export default function PaymentForm() {
             <FormLabel id="demo-radio-buttons-group-label">Bank</FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="bni"
               name="radio-buttons-group"
+              value={value}
+              onChange={handleChange}
             >
-              <FormControlLabel value="bri" control={<Radio />} label="BRI" />
-              <FormControlLabel value="bni" control={<Radio />} label="BNI" />
-              <FormControlLabel value="mandiri" control={<Radio />} label="Mandiri" />
+              <FormControlLabel value="BRI" control={<Radio />} label="Bank Rakyat Indonesia (BRI)" />
+              <FormControlLabel value="BNI" control={<Radio />} label="Bank Negara Indonesia (BNI)" />
+              <FormControlLabel value="MANDIRI" control={<Radio />} label="Bank Mandiri" />
+              <FormControlLabel value="PERMATA" control={<Radio />} label="Bank Permata" />
+              <FormControlLabel value="BSI" control={<Radio />} label="Bank Syariah Indonesia (BSI)" />
             </RadioGroup>
           </FormControl>
         </Grid>

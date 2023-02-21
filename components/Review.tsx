@@ -7,14 +7,11 @@ import Grid from '@mui/material/Grid';
 import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
 
-const payments = [
-  { name: 'Bank', detail: 'BNI' },
-  { name: 'Virtual account', detail: '01234567890' },
-];
-
 export default function Review() {
   const cart = useSelector((state: RootState) => state.cart)
   const user = useSelector((state: RootState) => state.app.user)
+  const bank = useSelector((state: RootState) => state.app.bank)
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -47,16 +44,14 @@ export default function Review() {
             Rincian pembayaran
           </Typography>
           <Grid container>
-            {payments.map((payment) => (
-              <React.Fragment key={payment.name}>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
-                </Grid>
-              </React.Fragment>
-            ))}
+            <React.Fragment>
+              <Grid item xs={6}>
+                <Typography gutterBottom>Bank</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography gutterBottom>{bank}</Typography>
+              </Grid>
+            </React.Fragment>
           </Grid>
         </Grid>
       </Grid>

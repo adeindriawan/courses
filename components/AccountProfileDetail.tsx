@@ -9,30 +9,44 @@ import {
   Grid,
   TextField
 } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../stores';
 
-const states = [
+const employmentStatuses = [
   {
-    value: 'alabama',
-    label: 'Alabama'
+    value: 1,
+    label: 'Pelajar/Mahasiswa'
   },
   {
-    value: 'new-york',
-    label: 'New York'
+    value: 2,
+    label: 'Karyawan'
   },
   {
-    value: 'san-francisco',
-    label: 'San Francisco'
+    value: 3,
+    label: 'Freelancer/Self-employed'
+  },
+  {
+    value: 4,
+    label: 'Tidak bekerja/Job seeker'
+  },
+  {
+    value: 5,
+    label: 'Guru/Dosen/Akademisi'
+  },
+  {
+    value: 6,
+    label: 'Manajer/Direktur/Wirausaha'
   }
 ];
 
 export const AccountProfileDetails = (props: object) => {
+  const user = useSelector((state: RootState) => state.app.user)
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    firstName: user.fname,
+    lastName: user.lname,
+    email: user.email,
+    phone: user.phone,
+    employmentStatus: user.employment
   });
 
   const handleChange = (event: any) => {
@@ -127,31 +141,16 @@ export const AccountProfileDetails = (props: object) => {
             >
               <TextField
                 fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
+                label="Employment status"
+                name="employment"
                 onChange={handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.state}
+                value={values.employmentStatus}
                 variant="outlined"
               >
-                {states.map((option) => (
+                {employmentStatuses.map((option) => (
                   <option
                     key={option.value}
                     value={option.value}

@@ -7,6 +7,8 @@ export interface User {
   fname: string,
   lname: string,
   email: string,
+  phone: string,
+  employment: number,
   avatar_url: string
 }
 
@@ -14,6 +16,7 @@ export interface App {
   isLoading: boolean,
   authenticated: boolean,
   user: User,
+  bank: string,
   token: string
 }
 
@@ -25,8 +28,11 @@ const initialState: App = {
     fname: '',
     lname: '',
     email: '',
+    phone: '',
+    employment: 0,
     avatar_url: 'https://avatars.githubusercontent.com/u/23217542?v=4'
   },
+  bank: "",
   token: ""
 };
 
@@ -48,6 +54,11 @@ const appSlice = createSlice({
       state.user.fname = action.payload.fname;
       state.user.lname = action.payload.lname;
       state.user.email = action.payload.email;
+      state.user.phone = action.payload.phone;
+      state.user.employment = action.payload.employment;
+    },
+    setBank: (state, action: PayloadAction<string>) => {
+      state.bank = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -62,6 +73,6 @@ const appSlice = createSlice({
   }
 });
 
-export const { setLoading, logIn, logOut, updateUser } = appSlice.actions;
+export const { setLoading, logIn, logOut, updateUser, setBank } = appSlice.actions;
 
 export default appSlice.reducer;
