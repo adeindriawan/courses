@@ -12,9 +12,10 @@ import Button from '@mui/material/Button';
 import Link from 'next/link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AddressForm from '../components/AddressForm';
+import UserInfo from '../components/UserInfo';
 import PaymentForm from '../components/PaymentForm';
 import Review from '../components/Review';
+import Header from '../components/Header';
 
 function Copyright() {
   return (
@@ -29,12 +30,12 @@ function Copyright() {
   );
 }
 
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
+const steps = ['Info akun', 'Rincian pembayaran', 'Detail order'];
 
 function getStepContent(step: number) {
   switch (step) {
     case 0:
-      return <AddressForm />;
+      return <UserInfo />;
     case 1:
       return <PaymentForm />;
     case 2:
@@ -48,6 +49,12 @@ const theme = createTheme();
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const sections = [
+    { title: 'Home', url: '/' },
+    { title: 'Courses', url: '/catalog' },
+    { title: 'About', url: '/about' },
+    { title: 'Cart', url: '/cart' },
+  ];
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -60,22 +67,8 @@ export default function Checkout() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar
-        position="absolute"
-        color="default"
-        elevation={0}
-        sx={{
-          position: 'relative',
-          borderBottom: (t) => `1px solid ${t.palette.divider}`,
-        }}
-      >
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Company name
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+      <Container>
+        <Header title="TSA Courses" sections={sections} />
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
             Checkout
@@ -104,7 +97,7 @@ export default function Checkout() {
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                    Back
+                    Kembali
                   </Button>
                 )}
                 <Button
@@ -112,7 +105,7 @@ export default function Checkout() {
                   onClick={handleNext}
                   sx={{ mt: 3, ml: 1 }}
                 >
-                  {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                  {activeStep === steps.length - 1 ? 'Buat order' : 'Lanjut'}
                 </Button>
               </Box>
             </React.Fragment>

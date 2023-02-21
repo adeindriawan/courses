@@ -1,11 +1,16 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import {
+  Badge,
+  Button,
+  Toolbar,
+  IconButton,
+  Typography
+} from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import { RootState } from '../stores';
 
 interface HeaderProps {
   sections: ReadonlyArray<{
@@ -21,28 +26,40 @@ export default function Header(props: HeaderProps) {
     color: red;
     padding: 10px;
   `
+  const cart = useSelector((state: RootState) => state.cart)
+  const app = useSelector((state: RootState) => state.app)
 
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Button size="small">install</Button>
         <Typography
           component="h2"
           variant="h5"
           color="inherit"
-          align="center"
+          align="left"
           noWrap
           sx={{ flex: 1 }}
         >
           {title}
         </Typography>
-        <IconButton sx={{ marginRight: 5 }} href="/checkout">
-          <ShoppingCartIcon />
+        <Button size="small" sx={{ marginRight: 5 }}>install</Button>
+        <IconButton sx={{ marginRight: 5 }}>
+          <Link href="/cart">
+            <Badge badgeContent={cart.length} color="primary" showZero>
+              <ShoppingCartIcon />
+            </Badge>
+          </Link>
         </IconButton>
         <Button variant="outlined" size="small">
-          <Link href="/signup">
-            Sign up
-          </Link>
+          {
+            (app.authenticated) ?
+            <Link href="/account">
+              Account
+            </Link> :
+            <Link href="/signup">
+              Sign up
+            </Link>
+          }
         </Button>
       </Toolbar>
       <Toolbar
