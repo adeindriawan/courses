@@ -12,7 +12,6 @@ const Account = () => {
     { title: 'Home', url: '/' },
     { title: 'Courses', url: '/catalog' },
     { title: 'About', url: '/about' },
-    { title: 'Cart', url: '/cart' },
   ];
 
   return (

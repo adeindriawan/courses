@@ -48,7 +48,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   })
 }));
 
-export default function CourseCard({ id, name, image }: { id: number, name: string, image: string }) {
+export default function CourseCard({ id, name, instructor, shortDetail, image }: { id: number, name: string, instructor: string, shortDetail: string, image: string }) {
   const [expanded, setExpanded] = React.useState(false);
   const [openFeedback, setOpenFeedback] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
@@ -209,8 +209,7 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
           {name}
         </Typography>
         <Typography>
-          This is a media card. You can use this section to describe the
-          content.
+          {instructor}
         </Typography>
       </CardContent>
       <CardActions>
@@ -240,8 +239,7 @@ export default function CourseCard({ id, name, image }: { id: number, name: stri
         <CardContent>
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
-                Heat 1/2 cup of the broth in a pot until simmering, add
-                saffron and set aside for 10 minutes.
+                {shortDetail}
           </Typography>
           <Typography paragraph>
                 Heat oil in a (14- to 16-inch) paella pan or a large,

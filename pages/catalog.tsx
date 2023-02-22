@@ -34,7 +34,6 @@ export default function Catalog() {
     { title: 'Home', url: '/' },
     { title: 'Courses', url: '/catalog' },
     { title: 'About', url: '/about' },
-    { title: 'Cart', url: '/cart' },
   ];
   const { 
     data,
@@ -51,38 +50,11 @@ export default function Catalog() {
   } else if (isSuccess) {
     content = data.map((c: Course) => (
       <Grid item key={c.id} xs={12} sm={6} md={4}>
-        <CourseCard id={c.id} name={c.name} image={c.image} />
+        <CourseCard id={c.id} name={c.name} instructor={c.instructor} shortDetail={c.shortDetail} image={c.image} />
       </Grid>
     ))
   } else if (isError) {
     content = <div>{error.toString()}</div>
-  }
-
-  const check = async () => {
-    const url = 'https://academy.itsteknosains.co.id/api/test/order/create'
-    const data = {
-      "courses": [{"id":1,"name":"Training 100","instructor":"Instructor 1","prices":[{"0":100000},{"1":75000},{"2":125000}],"startDate":"2021-11-25 09:00:00","endDate":"2021-11-27 17:00:00","type":1,"image":"training.jpeg"},{"id":2,"name":"Training 2","instructor":"Instructor 2","prices":[],"startDate":"2021-12-01 08:00:00","endDate":null,"type":0,"image":"training.jpeg"}],
-      "amount": 100,
-      "userId": 1,
-      "email": "aindriawan1@gmail.com",
-      "name": "Ade Indriawan",
-      "apiKey": "xnd_development_mW4GIVnkX6JFUeANIQRU5yn7YRr4Vnyrg0PEMuwX00BF8yfnX4CbAbHBc0ok4uig",
-      "bankCode": "BNI"
-    }
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic eG5kX2RldmVsb3BtZW50X21XNEdJVm5rWDZKRlVlQU5JUVJVNXluN1lScjRWbnlyZzBQRU11d1gwMEJGOHlmblg0Q2JBYkhCYzBvazR1aWc6'
-      },
-      body: JSON.stringify(data)
-    });
-
-    return response.json()
-  }
-
-  const click = () => {
-    console.log(check())
   }
   
   return (
