@@ -7,6 +7,7 @@ export interface Cart {
   shortDetail: string,
   instructor: string,
   prices: Array<object>,
+  price: object,
   startDate: string,
   endDate: string,
   type: number,

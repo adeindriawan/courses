@@ -2,12 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../api';
 
 export const GET_COURSES = 'GET_COURSES';
+interface CoursePriceLevel {
+  [key: number]: string,
+};
 export interface Course {
   id: number,
   name: string,
   shortDetail: string,
   instructor: string,
-  prices: Array<object>,
+  prices: Array<CoursePriceLevel>,
   startDate: string,
   endDate: string,
   type: number,

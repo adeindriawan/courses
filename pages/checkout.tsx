@@ -57,6 +57,7 @@ export default function Checkout() {
     { title: 'About', url: '/about' },
   ];
   const app = useSelector((state: RootState) => state.app)
+  const cart = useSelector((state: RootState) => state.cart)
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -73,7 +74,7 @@ export default function Checkout() {
   const createVA = async () => {
     const url = 'https://academy.itsteknosains.co.id/api/test/order/create'
     const data = {
-      "courses": [{"id":1,"name":"Training 100","instructor":"Instructor 1","prices":[{"0":100000},{"1":75000},{"2":125000}],"startDate":"2021-11-25 09:00:00","endDate":"2021-11-27 17:00:00","type":1,"image":"training.jpeg"},{"id":2,"name":"Training 2","instructor":"Instructor 2","prices":[],"startDate":"2021-12-01 08:00:00","endDate":null,"type":0,"image":"training.jpeg"}],
+      "courses": cart,
       "amount": 100,
       "userId": 1,
       "email": app.user.email,

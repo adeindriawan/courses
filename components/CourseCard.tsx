@@ -25,7 +25,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../stores'
 import { baseURL } from '../config'
-import { addToCart, removeFromCart } from '../stores/cart'
+import { Course, Courses } from '../stores/course'
+import { Cart, addToCart, removeFromCart } from '../stores/cart'
 import { addToFavorite, removeFromFavorite } from '../stores/favorite'
 import { useGetCoursesQuery } from '../stores/api'
 import { useRouter } from 'next/router'
@@ -48,7 +49,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   })
 }));
 
-export default function CourseCard({ id, name, instructor, shortDetail, image }: { id: number, name: string, instructor: string, shortDetail: string, image: string }) {
+export default function CourseCard({ id, name, instructor, prices, shortDetail, image }: { id: number, name: string, instructor: string, prices: Array<object>; shortDetail: string, image: string }) {
   const [expanded, setExpanded] = React.useState(false);
   const [openFeedback, setOpenFeedback] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
@@ -56,7 +57,8 @@ export default function CourseCard({ id, name, instructor, shortDetail, image }:
   const cart = useSelector((state: RootState) => state.cart);
   const isAuthenticated = useSelector((state: RootState) => state.app.authenticated);
   const favorite = useSelector((state: RootState) => state.favorite);
-  const courses = data ?? [];
+  const user = useSelector((state: RootState) => state.app.user);
+  const courses: Courses = data ?? [];
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -90,12 +92,36 @@ export default function CourseCard({ id, name, instructor, shortDetail, image }:
 
   const handleAddToCartClick = (id: number) => {
     if (isAuthenticated) {
-      const selectedCourse = courses.filter(course => {
-        return course.id === id;
-      });
-      dispatch(addToCart(selectedCourse[0]));
-      setFeedbackMessage("Added to cart")
-      setOpenFeedback(true)
+      const employmentCategories: any = prices.map((i, v) => parseInt(Object.keys(i)[0], 10));
+
+      let itemToAdd: Cart | undefined = undefined;
+      if ((user.employment in prices)) { // cek apakah ada kecocokan status karir
+        // dengan tipe harga training
+        const courseSelected: Course = courses.find((x: Course) => x.id === id)!;
+        const selectedPrice = prices[user.employment];
+        itemToAdd = {...courseSelected, price: selectedPrice}
+      } else if ((employmentCategories.includes(7)) || (employmentCategories.includes(2))) { // cek apakah ada harga training
+        // untuk tipe Umum || Karyawan
+        const courseSelected: Course = courses.find((x) => x.id === id)!;
+        const selectedPrice = courseSelected.prices.find((x) => x[2]) || courseSelected.prices.find((x) => x[7]);
+        itemToAdd = {...courseSelected, price: selectedPrice as object}
+      } else if (Object.keys(prices).length === 0) {
+        const courseSelected = courses.find((x) => x.id === id)!;
+        const selectedPrice: object = { 0: 0 };
+        itemToAdd = {...courseSelected, price: selectedPrice}
+      } else {
+        // eslint-disable-next-line no-alert
+        alert('Tidak ada harga yang cocok untuk Anda!');
+        console.log(user.employment);
+        console.log(prices);
+      }
+      console.log(itemToAdd)
+
+      if (itemToAdd !== undefined) {
+        dispatch(addToCart(itemToAdd));
+        setFeedbackMessage("Added to cart")
+        setOpenFeedback(true)
+      }
     } else {
       router.push('/signin')
     }
