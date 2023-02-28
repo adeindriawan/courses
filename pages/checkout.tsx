@@ -20,9 +20,9 @@ import UserInfo from '../components/UserInfo';
 import PaymentForm from '../components/PaymentForm';
 import Review from '../components/Review';
 import Header from '../components/Header';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../stores';
-import { Carts } from '../stores/cart';
+import { emptyCart } from '../stores/cart';
 
 function Copyright() {
   return (
@@ -56,7 +56,8 @@ const theme = createTheme();
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [bankSelectedAlertOpened, setBankSelectedAlertOpened] = React.useState(false)
+  const [bankSelectedAlertOpened, setBankSelectedAlertOpened] = React.useState(false);
+  const [VA, setVA] = React.useState("");
   const sections = [
     { title: 'Home', url: '/' },
     { title: 'Courses', url: '/catalog' },
@@ -64,7 +65,8 @@ export default function Checkout() {
   ];
   const app = useSelector((state: RootState) => state.app)
   const cart = useSelector((state: RootState) => state.cart)
-  const cartTotal = cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0])
+  const cartTotal = cart.length > 0 ? cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0]) : 0;
+  const dispatch = useDispatch()
 
   React.useEffect(() => {
     if (app.bank !== "") {
@@ -80,7 +82,10 @@ export default function Checkout() {
     }
 
     if (activeStep === steps.length - 1) {
-      console.log(createVA());
+      const VACreated = createVA();
+      // const accountNumber = VACreated.VA.account_number;
+      console.log(VACreated);
+      dispatch(emptyCart())
     }
   };
 
@@ -106,9 +111,14 @@ export default function Checkout() {
         'Authorization': `Basic ${process.env.NEXT_PUBLIC_XENDIT_API_KEY_BASE64}`
       },
       body: JSON.stringify(data)
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setVA(data.data.VA.account_number)
+      return data.data;
     });
 
-    return response.json()
+    return response;
   }
 
   return (
@@ -133,9 +143,9 @@ export default function Checkout() {
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #2001539. We have emailed your order
+                {`Your virtual account is ${VA}. We have emailed your order
                 confirmation, and will send you an update when your order has
-                shipped.
+                shipped.`}
               </Typography>
             </React.Fragment>
           ) : (

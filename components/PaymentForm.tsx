@@ -8,12 +8,19 @@ import {
   RadioGroup,
   Typography
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../stores';
 import { setBank } from '../stores/app';
 
 export default function PaymentForm() {
+  const bank = useSelector((state: RootState) => state.app.bank)
   const dispatch = useDispatch();
   const [value, setValue] = React.useState('');
+
+  React.useEffect(() => {
+    setValue(bank)
+  }, [bank]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const bank = (event.target as HTMLInputElement).value;
     setValue(bank);
