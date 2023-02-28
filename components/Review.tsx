@@ -9,6 +9,7 @@ import { RootState } from '../stores';
 
 export default function Review() {
   const cart = useSelector((state: RootState) => state.cart)
+  const cartTotal = cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0])
   const user = useSelector((state: RootState) => state.app.user)
   const bank = useSelector((state: RootState) => state.app.bank)
 
@@ -21,13 +22,13 @@ export default function Review() {
         {cart.map((item) => (
           <ListItem key={item.id} sx={{ py: 1, px: 0 }}>
             <ListItemText primary={item.name} secondary={item.shortDetail} />
-            <Typography variant="body2">{item.type}</Typography>
+            <Typography variant="body2">{`Rp${Object.values(item.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}</Typography>
           </ListItem>
         ))}
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            $34.06
+            {`Rp${cartTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
           </Typography>
         </ListItem>
       </List>

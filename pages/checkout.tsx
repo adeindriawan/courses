@@ -1,23 +1,28 @@
 import * as React from 'react';
 import {
+  Alert,
   Box,
   Button,
+  Collapse,
   Container,
   CssBaseline,
+  IconButton,
   Paper,
   Stepper,
   Step,
   StepLabel,
   Typography
 } from '@mui/material';
-import Link from 'next/link';
+import CloseIcon from '@mui/icons-material/Close';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Link from 'next/link';
 import UserInfo from '../components/UserInfo';
 import PaymentForm from '../components/PaymentForm';
 import Review from '../components/Review';
 import Header from '../components/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
+import { Carts } from '../stores/cart';
 
 function Copyright() {
   return (
@@ -51,6 +56,7 @@ const theme = createTheme();
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [bankSelectedAlertOpened, setBankSelectedAlertOpened] = React.useState(false)
   const sections = [
     { title: 'Home', url: '/' },
     { title: 'Courses', url: '/catalog' },
@@ -58,9 +64,20 @@ export default function Checkout() {
   ];
   const app = useSelector((state: RootState) => state.app)
   const cart = useSelector((state: RootState) => state.cart)
+  const cartTotal = cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0])
+
+  React.useEffect(() => {
+    if (app.bank !== "") {
+      setBankSelectedAlertOpened(false)
+    }
+  }, [app.bank])
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    if (activeStep === 1 && app.bank === "") {
+      setBankSelectedAlertOpened(true)
+    } else {
+      setActiveStep(activeStep + 1);
+    }
 
     if (activeStep === steps.length - 1) {
       console.log(createVA());
@@ -72,21 +89,21 @@ export default function Checkout() {
   };
 
   const createVA = async () => {
-    const url = 'https://academy.itsteknosains.co.id/api/test/order/create'
+    const url = 'https://academy.itsteknosains.co.id/api/test/form/validation'
     const data = {
       "courses": cart,
-      "amount": 100,
-      "userId": 1,
+      "amount": cartTotal,
+      "userId": app.user.id,
       "email": app.user.email,
       "name": app.user.fname + " " + app.user.lname,
-      "apiKey": "xnd_development_mW4GIVnkX6JFUeANIQRU5yn7YRr4Vnyrg0PEMuwX00BF8yfnX4CbAbHBc0ok4uig",
+      "apiKey": process.env.NEXT_PUBLIC_XENDIT_API_KEY,
       "bankCode": app.bank
     }
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic eG5kX2RldmVsb3BtZW50X21XNEdJVm5rWDZKRlVlQU5JUVJVNXluN1lScjRWbnlyZzBQRU11d1gwMEJGOHlmblg0Q2JBYkhCYzBvazR1aWc6'
+        'Authorization': `Basic ${process.env.NEXT_PUBLIC_XENDIT_API_KEY_BASE64}`
       },
       body: JSON.stringify(data)
     });
@@ -125,6 +142,25 @@ export default function Checkout() {
             <React.Fragment>
               {getStepContent(activeStep)}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Collapse in={bankSelectedAlertOpened}>
+                  <Alert
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setBankSelectedAlertOpened(false);
+                        }}
+                      >
+                        <CloseIcon fontSize="inherit" />
+                      </IconButton>
+                    }
+                    sx={{ mb: 2 }}
+                  >
+                    Anda harus memilih bank dulu!
+                  </Alert>
+                </Collapse>
                 {activeStep !== 0 && (
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                     Kembali
