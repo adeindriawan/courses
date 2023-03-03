@@ -66,7 +66,6 @@ export default function Checkout() {
   ];
   const app = useSelector((state: RootState) => state.app)
   const cart = useSelector((state: RootState) => state.cart)
-  // const cartTotal = cart.length > 0 ? cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0], 0) : 0;
   let cartTotal = 0
   if (cart.length == 1) {
     cartTotal = Object.values(cart[0].price)[0];

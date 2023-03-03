@@ -30,6 +30,7 @@ import { Cart, addToCart, removeFromCart } from '../stores/cart'
 import { addToFavorite, removeFromFavorite } from '../stores/favorite'
 import { useGetCoursesQuery } from '../stores/api'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean,
@@ -231,9 +232,11 @@ export default function CourseCard({ id, name, instructor, prices, shortDetail, 
         alt="random"
       />
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography gutterBottom variant="h5" component="h2">
-          {name}
-        </Typography>
+        <Link href={`/details/${id}`}>
+          <Typography gutterBottom variant="h5" component="h2">
+            {name}
+          </Typography>
+        </Link>
         <Typography>
           {instructor}
         </Typography>
