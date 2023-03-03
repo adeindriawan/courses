@@ -9,7 +9,7 @@ import { RootState } from '../stores';
 
 export default function Review() {
   const cart = useSelector((state: RootState) => state.cart)
-  const cartTotal = cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0])
+  const cartTotal = useSelector((state: RootState) => state.app.cartTotal)
   const user = useSelector((state: RootState) => state.app.user)
   const bank = useSelector((state: RootState) => state.app.bank)
 

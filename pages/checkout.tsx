@@ -23,6 +23,7 @@ import Header from '../components/Header';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../stores';
 import { emptyCart } from '../stores/cart';
+import { setCartTotal } from '../stores/app';
 
 function Copyright() {
   return (
@@ -65,14 +66,21 @@ export default function Checkout() {
   ];
   const app = useSelector((state: RootState) => state.app)
   const cart = useSelector((state: RootState) => state.cart)
-  const cartTotal = cart.length > 0 ? cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0]) : 0;
+  // const cartTotal = cart.length > 0 ? cart.map(c => c.price).reduce((a, b) => Object.values(a)[0] + Object.values(b)[0], 0) : 0;
+  let cartTotal = 0
+  if (cart.length == 1) {
+    cartTotal = Object.values(cart[0].price)[0];
+  } else if (cart.length > 1) {
+    cartTotal = cart.map(c => c.price).reduce((a, b) => a + Object.values(b)[0], 0);
+  }
   const dispatch = useDispatch()
 
   React.useEffect(() => {
     if (app.bank !== "") {
       setBankSelectedAlertOpened(false)
     }
-  }, [app.bank])
+    dispatch(setCartTotal(cartTotal))
+  }, [app.bank, cartTotal, dispatch])
 
   const handleNext = () => {
     if (activeStep === 1 && app.bank === "") {

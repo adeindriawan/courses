@@ -16,6 +16,7 @@ export interface App {
   isLoading: boolean,
   authenticated: boolean,
   user: User,
+  cartTotal: number,
   bank: string,
   token: string
 }
@@ -33,6 +34,7 @@ const initialState: App = {
     avatar_url: 'https://avatars.githubusercontent.com/u/23217542?v=4'
   },
   bank: "",
+  cartTotal: 0,
   token: ""
 };
 
@@ -59,6 +61,9 @@ const appSlice = createSlice({
     },
     setBank: (state, action: PayloadAction<string>) => {
       state.bank = action.payload;
+    },
+    setCartTotal: (state, action: PayloadAction<number>) => {
+      state.cartTotal = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -73,6 +78,6 @@ const appSlice = createSlice({
   }
 });
 
-export const { setLoading, logIn, logOut, updateUser, setBank } = appSlice.actions;
+export const { setLoading, logIn, logOut, updateUser, setBank, setCartTotal } = appSlice.actions;
 
 export default appSlice.reducer;
