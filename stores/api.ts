@@ -38,7 +38,21 @@ export const api = createApi({
     getUsers: builder.query({
       query: () => `users`,
     }),
+
+    createVA: builder.mutation({
+      query: (body) => ({
+        url: `payment/va/create`,
+        method: 'POST',
+        body: body,
+        prepareHeaders: (headers: Headers) => {
+          headers.set("Content-Type", "application/json");
+          headers.set("Authorization", `Basic ${process.env.NEXT_PUBLIC_XENDIT_API_KEY_BASE64}`);
+
+          return headers;
+        }
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useGetUsersQuery, useGetCoursesQuery } = api;
+export const { useLoginMutation, useGetUsersQuery, useGetCoursesQuery, useCreateVAMutation } = api;

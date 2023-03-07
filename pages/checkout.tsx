@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   Collapse,
   Container,
   CssBaseline,
@@ -24,6 +25,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../stores';
 import { emptyCart } from '../stores/cart';
 import { setCartTotal } from '../stores/app';
+import { useCreateVAMutation } from '../stores/api';
 
 function Copyright() {
   return (
@@ -72,7 +74,8 @@ export default function Checkout() {
   } else if (cart.length > 1) {
     cartTotal = cart.map(c => c.price).reduce((a, b) => a + Object.values(b)[0], 0);
   }
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const [createVA, {isLoading, data, error}] = useCreateVAMutation();
 
   React.useEffect(() => {
     if (app.bank !== "") {
@@ -89,9 +92,15 @@ export default function Checkout() {
     }
 
     if (activeStep === steps.length - 1) {
-      const VACreated = createVA();
-      // const accountNumber = VACreated.VA.account_number;
-      console.log(VACreated);
+      createVA({
+        "courses": cart,
+        "amount": cartTotal,
+        "userId": app.user.id,
+        "email": app.user.email,
+        "name": app.user.fname + " " + app.user.lname,
+        "apiKey": process.env.NEXT_PUBLIC_XENDIT_API_KEY,
+        "bankCode": app.bank
+      });
       dispatch(emptyCart())
     }
   };
@@ -99,34 +108,6 @@ export default function Checkout() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-
-  const createVA = async () => {
-    const url = 'https://academy.itsteknosains.co.id/api/test/form/validation'
-    const data = {
-      "courses": cart,
-      "amount": cartTotal,
-      "userId": app.user.id,
-      "email": app.user.email,
-      "name": app.user.fname + " " + app.user.lname,
-      "apiKey": process.env.NEXT_PUBLIC_XENDIT_API_KEY,
-      "bankCode": app.bank
-    }
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${process.env.NEXT_PUBLIC_XENDIT_API_KEY_BASE64}`
-      },
-      body: JSON.stringify(data)
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      setVA(data.data.VA.account_number)
-      return data.data;
-    });
-
-    return response;
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -146,14 +127,20 @@ export default function Checkout() {
           </Stepper>
           {activeStep === steps.length ? (
             <React.Fragment>
-              <Typography variant="h5" gutterBottom>
-                Thank you for your order.
-              </Typography>
-              <Typography variant="subtitle1">
-                {`Your virtual account is ${VA}. We have emailed your order
-                confirmation, and will send you an update when your order has
-                shipped.`}
-              </Typography>
+              {isLoading ? (
+                <CircularProgress />
+              ) : (
+                <>
+                  <Typography variant="h5" gutterBottom>
+                    Thank you for your order.
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    {`Your virtual account is ${data.data.VA.account_number}. We have emailed your order
+                    confirmation, and will send you an update when your order has
+                    shipped.`}
+                  </Typography>
+                </>
+              )}
             </React.Fragment>
           ) : (
             <React.Fragment>

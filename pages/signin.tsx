@@ -39,10 +39,6 @@ export default function SignIn() {
     const email = data.get('email')
     const password = data.get('password')
     login({ email, password});
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
     router.push('/catalog');
   };
 
