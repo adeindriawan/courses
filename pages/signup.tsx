@@ -1,4 +1,10 @@
 import * as React from 'react';
+import {
+  FormControl,
+  FormLabel,
+  Radio,
+  RadioGroup
+} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +18,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useRegisterMutation } from '../stores/api';
+import { useRouter } from 'next/router';
 
 function Copyright(props: any) {
   return (
@@ -29,14 +37,34 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUp() {
+  const [register, { isLoading, data, error }] = useRegisterMutation();
+  const router = useRouter();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    register({
+      fname: data.get('firstName'),
+      lname: data.get('lastName'),
+      phone: data.get('phone'),
+      employment: data.get('employment'),
       email: data.get('email'),
       password: data.get('password'),
+      password_confirmation: data.get('password')
     });
+    router.push('/signin');
   };
+
+  const [value, setValue] = React.useState('');
+  const employment = '';
+
+  React.useEffect(() => {
+    setValue(employment)
+  }, [employment]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const employment = (event.target as HTMLInputElement).value;
+    setValue(employment);
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -78,6 +106,58 @@ export default function SignUp() {
                   name="lastName"
                   autoComplete="family-name"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phone"
+                  label="Phone number"
+                  name="phone"
+                  autoComplete="phone"
+                />
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <FormControl>
+                  <FormLabel id="demo-radio-buttons-group-label">Status Karir</FormLabel>
+                    <RadioGroup
+                    aria-label="employment"
+                    name="employment"
+                    value={value}
+                    onChange={handleChange}
+                  >
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="Pelajar/Mahasiswa"
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="Karyawan"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="Freelancer/Self-employed"
+                    />
+                    <FormControlLabel
+                      value="4"
+                      control={<Radio />}
+                      label="Tidak bekerja/Jobseeker"
+                    />
+                    <FormControlLabel
+                      value="5"
+                      control={<Radio />}
+                      label="Guru/Dosen/Akademisi"
+                    />
+                    <FormControlLabel
+                      value="6"
+                      control={<Radio />}
+                      label="Manajer/Direktur/Wirausaha"
+                    />
+                  </RadioGroup>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField

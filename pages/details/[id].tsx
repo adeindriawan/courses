@@ -44,7 +44,7 @@ const Details = () => {
   const cart = state.cart;
   const { data } = useGetCoursesQuery();
   const courses: Courses = data ?? [];
-  const details = courses.find((x: Course) => x.id === id)
+  const details: Course = courses.find((x: Course) => x.id === id)!
   const prices = details!.prices;
   const name = details!.name;
   const instructor = details!.instructor;

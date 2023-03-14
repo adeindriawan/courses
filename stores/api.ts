@@ -31,6 +31,14 @@ export const api = createApi({
       }),
     }),
 
+    register: builder.mutation({
+      query: (credentials) => ({
+        url: `register`,
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
+
     getCourses: builder.query<Courses, void>({
       query: () => `courses`
     }),
@@ -55,4 +63,4 @@ export const api = createApi({
   }),
 });
 
-export const { useLoginMutation, useGetUsersQuery, useGetCoursesQuery, useCreateVAMutation } = api;
+export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useCreateVAMutation } = api;
