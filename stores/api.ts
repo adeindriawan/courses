@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from './index';
-import { Courses } from './course';
+import { Course, Courses } from './course';
 import { APIURL } from '../config';
 
 export const api = createApi({
@@ -43,6 +43,10 @@ export const api = createApi({
       query: () => `courses`
     }),
 
+    getCourseDetails: builder.query<Course, void>({
+      query: (id) => `courses/${id}/details`
+    }),
+
     getUsers: builder.query({
       query: () => `users`,
     }),
@@ -63,4 +67,4 @@ export const api = createApi({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useCreateVAMutation } = api;
+export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useLazyGetCourseDetailsQuery, useCreateVAMutation } = api;
