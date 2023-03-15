@@ -50,7 +50,7 @@ export default function Catalog() {
   } else if (isSuccess) {
     content = data.map((c: Course) => (
       <Grid item key={c.id} xs={12} sm={6} md={4}>
-        <CourseCard id={c.id} name={c.name} instructor={c.instructor} prices={c.prices} shortDetail={c.shortDetail} image={c.image} />
+        <CourseCard id={c.id} name={c.name} instructor={c.instructor} prices={c.prices} startDate={c.startDate} endDate={c.endDate} shortDetail={c.shortDetail} image={c.image} />
       </Grid>
     ))
   } else if (isError) {
