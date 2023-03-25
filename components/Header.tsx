@@ -40,7 +40,9 @@ export default function Header(props: HeaderProps) {
           noWrap
           sx={{ flex: 1 }}
         >
-          {title}
+          <Link href="/">
+            {title}
+          </Link>
         </Typography>
         <Button size="small" sx={{ marginRight: 5 }}>install</Button>
         <IconButton sx={{ marginRight: 5 }}>

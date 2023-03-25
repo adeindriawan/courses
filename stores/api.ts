@@ -43,7 +43,7 @@ export const api = createApi({
       query: () => `courses`
     }),
 
-    getCourseDetails: builder.query<Course, void>({
+    getCourseDetails: builder.query<Course, number>({
       query: (id) => `courses/${id}/details`
     }),
 
