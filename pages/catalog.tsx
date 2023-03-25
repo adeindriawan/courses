@@ -13,6 +13,7 @@ import Header from '../components/Header';
 import CourseCard from '../components/CourseCard';
 import { useGetCoursesQuery } from '../stores/api';
 import { Course } from '../stores/course';
+import Footer from '../components/Footer';
 
 function Copyright() {
   return (
@@ -61,7 +62,7 @@ export default function Catalog() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container>
-        <Header title="TSA Courses" sections={sections} />
+        <Header title="Courses" sections={sections} />
         <main>
           {/* Hero unit */}
           <Container sx={{ py: 8 }} maxWidth="md">
@@ -72,20 +73,10 @@ export default function Catalog() {
           </Container>
         </main>
         {/* Footer */}
-        <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
-          <Typography variant="h6" align="center" gutterBottom>
-            Footer
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            color="text.secondary"
-            component="p"
-          >
-            Something here to give the footer a purpose!
-          </Typography>
-          <Copyright />
-        </Box>
+        <Footer
+          title="Courses By ITS Tekno Sains"
+          description="A collection of trainings & bootcamps by ITS Tekno Sains"
+        />
       </Container>
       {/* End footer */}
     </ThemeProvider>

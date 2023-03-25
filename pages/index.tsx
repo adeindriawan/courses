@@ -9,7 +9,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../components/Header';
 import MainFeatured from '../components/MainFeatured';
 import Featured from '../components/Featured';
-import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 
 const sections = [
@@ -22,7 +21,7 @@ const mainFeaturedPost = {
   title: 'Title of a longer featured blog post',
   description:
     "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-  image: 'https://source.unsplash.com/random',
+  image: '/banner.jpg',
   imageText: 'main image description',
   linkText: 'Continue reading…',
 };
@@ -33,7 +32,7 @@ const featuredPosts = [
     date: 'Nov 12',
     description:
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
+    image: '/banner.jpg',
     imageLabel: 'Image Text',
   },
   {
@@ -41,7 +40,7 @@ const featuredPosts = [
     date: 'Nov 11',
     description:
       'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
+    image: '/banner.jpg',
     imageLabel: 'Image Text',
   },
 ];
@@ -77,7 +76,7 @@ export default function Blog() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="lg">
-        <Header title="TSA Courses" sections={sections} />
+        <Header title="Courses" sections={sections} />
         <main>
           <MainFeatured post={mainFeaturedPost} />
           <Grid container spacing={4}>
@@ -85,19 +84,11 @@ export default function Blog() {
               <Featured key={post.title} post={post} />
             ))}
           </Grid>
-          <Grid container spacing={5} sx={{ mt: 3 }}>
-            <Sidebar
-              title={sidebar.title}
-              description={sidebar.description}
-              archives={sidebar.archives}
-              social={sidebar.social}
-            />
-          </Grid>
         </main>
       </Container>
       <Footer
-        title="Footer"
-        description="Something here to give the footer a purpose!"
+        title="Courses By ITS Tekno Sains"
+        description="A collection of trainings & bootcamps by ITS Tekno Sains"
       />
     </ThemeProvider>
   );

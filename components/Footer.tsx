@@ -9,7 +9,7 @@ function Copyright() {
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="/">
-        TSA Courses
+        Courses
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
