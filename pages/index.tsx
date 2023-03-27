@@ -13,7 +13,7 @@ import Footer from '../components/Footer';
 
 const sections = [
   { title: 'Home', url: '/' },
-  { title: 'Courses', url: '/catalog' },
+  { title: 'Catalog', url: '/catalog' },
   { title: 'About', url: '/about' },
 ];
 

@@ -57,7 +57,7 @@ export default function Cart() {
   const cart = useSelector((state: RootState) => state.cart);
   const sections = [
     { title: 'Home', url: '/' },
-    { title: 'Courses', url: '/catalog' },
+    { title: 'Catalog', url: '/catalog' },
     { title: 'About', url: '/about' },
   ];
   

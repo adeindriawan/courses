@@ -63,7 +63,7 @@ export default function Checkout() {
   const [VA, setVA] = React.useState("");
   const sections = [
     { title: 'Home', url: '/' },
-    { title: 'Courses', url: '/catalog' },
+    { title: 'Catalog', url: '/catalog' },
     { title: 'About', url: '/about' },
   ];
   const app = useSelector((state: RootState) => state.app)
