@@ -43,7 +43,7 @@ export const api = createApi({
       query: () => `courses`
     }),
 
-    getCourseDetails: builder.query<Course, number>({
+    getCourseDetails: builder.query<Courses, number>({
       query: (id) => `courses/${id}/details`
     }),
 
@@ -67,4 +67,4 @@ export const api = createApi({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useLazyGetCourseDetailsQuery, useCreateVAMutation } = api;
+export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useGetCourseDetailsQuery, useCreateVAMutation } = api;

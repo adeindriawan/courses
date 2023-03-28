@@ -1,40 +1,31 @@
 import * as React from 'react';
-import { GetStaticProps, GetStaticPaths  } from 'next';
+import { useRouter } from 'next/router'
 import { 
-    Box,
-    Button, 
-    Card,
-    CardActionArea, 
-    CardActions,
-    CardContent,
-    CardHeader, 
-    CardMedia,
-    Container, 
-    CssBaseline,
-    Divider, 
-    Grid,
-    IconButton,
-    Snackbar, 
-    Typography } from '@mui/material';
-import { useRouter } from 'next/router';
+  Box,
+  Button, 
+  Card,
+  CardActionArea, 
+  CardActions,
+  CardContent,
+  CardHeader, 
+  CardMedia,
+  Container, 
+  CssBaseline,
+  Divider, 
+  Grid,
+  IconButton,
+  Snackbar, 
+  Typography } from '@mui/material'
+import { useGetCourseDetailsQuery } from '../../stores/api'
 import Header from '../../components/Header';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Close as CloseIcon } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../stores';
-import { useDispatch } from 'react-redux';
-import { Course, Courses } from '../../stores/course';
-import { Cart, removeFromCart, addToCart } from '../../stores/cart';
-import { useGetCoursesQuery } from '../../stores/api';
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { Close as CloseIcon } from '@mui/icons-material'
+import { RootState } from '../../stores'
+import { useDispatch, useSelector } from 'react-redux'
+import { Course, Courses } from '../../stores/course'
+import { Cart, removeFromCart, addToCart } from '../../stores/cart'
 
-interface courseInterface {
-    id: number
-    name: string
-    description: string
-    link: string
-    prices: Array<object>
-    instructor: string
-}
+const theme = createTheme();
 
 const sections = [
   { title: 'Home', url: '/' },
@@ -42,148 +33,110 @@ const sections = [
   { title: 'About', url: '/about' },
 ];
 
-const theme = createTheme();
+export default function CoursePage() {
+  const [openFeedback, setOpenFeedback] = React.useState(false);
+  const [feedbackMessage, setFeedbackMessage] = React.useState("");
+  const { query } = useRouter()
+  const router = useRouter();
+  const { 
+    data,
+    isLoading,
+    error 
+  } = useGetCourseDetailsQuery(query.id as unknown as number);
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state);
+  const cart = state.cart;
+  const isAuthenticated = state.app.authenticated;
+  const user = state.app.user;
+  console.log(data);
 
-export async function getData(){
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/courses/data`);
-  const data = await res.json();
-  return data;
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  const itemID = context.params?.id;
-  const data = await getData();
-  const foundItem = data.courses.find((item: courseInterface) => itemID?.toString() === item.id.toString());
-
-  if (!foundItem) {
-    return {
-      props: { hasError: true },
-    }
-}
-
-return {
-  props: {
-    specificCourseData: foundItem
-  }
-}
-}
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await getData();
-  const pathsWithParams = data.courses.map((course: courseInterface) => ({ params: { id: course.id.toString() }}))
-
-  return {
-      paths: pathsWithParams,
-      fallback: true
-  }
-}
-
-function Details(props: { specificCourseData: courseInterface, 
-  hasError: boolean }) {
-    const [openFeedback, setOpenFeedback] = React.useState(false);
-    const [feedbackMessage, setFeedbackMessage] = React.useState("");
-    const [courses, setCourses] = React.useState<Courses>();
-    const router = useRouter();
-    const state = useSelector((state: RootState) => state);
-    const cart = state.cart;
-    const isThisCourseInCart = cart.find(item => item.id === props.specificCourseData.id);
-    const { data } = useGetCoursesQuery();
-    const isAuthenticated = state.app.authenticated;
-    const user = state.app.user;
-    const dispatch = useDispatch();
-
-    React.useEffect(() => {
-      setCourses(data);
-    }, [data]);
-
-    const ButtonFeedback = ({ title }: { title: string}) => {
-      return (
-        <Snackbar
-          open={openFeedback}
-          autoHideDuration={6000}
-          onClose={() => { console.log(`onClose`)}}
-          message={`title`}
-          action={action}
-        />
-      );
+  const isThisCourseInCart = cart.find(item => item.id == query.id as unknown as number);
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
     }
 
-    const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-  
-      setOpenFeedback(false);
-    };
+    setOpenFeedback(false);
+  };
 
-    const action = (
-      <React.Fragment>
-        <Button color="secondary" size="small" onClick={handleClose}>
-          UNDO
-        </Button>
-        <IconButton
-          size="small"
-          aria-label="close"
-          color="inherit"
-          onClick={handleClose}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </React.Fragment>
-    );
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
-    const handleAddToCartClick = () => {
-      const prices = props.specificCourseData.prices;
-      if (isAuthenticated) {
-        const employmentCategories: any = prices.map((i, v) => parseInt(Object.keys(i)[0], 10));
-
-        let itemToAdd: Cart | undefined = undefined;
-        if ((user.employment in prices)) { // cek apakah ada kecocokan status karir
-          // dengan tipe harga training
-          const courseSelected: Course = courses!.find((x: Course) => x.id === props.specificCourseData.id)!;
-          const selectedPrice = prices[user.employment];
-          itemToAdd = {...courseSelected, price: selectedPrice}
-        } else if ((employmentCategories.includes(7)) || (employmentCategories.includes(2))) { // cek apakah ada harga training
-          // untuk tipe Umum || Karyawan
-          const courseSelected: Course = courses!.find((x) => x.id === props.specificCourseData.id)!;
-          const selectedPrice = courseSelected.prices.find((x) => x[2]) || courseSelected.prices.find((x) => x[7]);
-          itemToAdd = {...courseSelected, price: selectedPrice as object}
-        } else if (Object.keys(prices).length === 0) {
-          const courseSelected = courses!.find((x) => x.id === props.specificCourseData.id)!;
-          const selectedPrice: object = { 0: 0 };
-          itemToAdd = {...courseSelected, price: selectedPrice}
-        } else {
-          // eslint-disable-next-line no-alert
-          alert('Tidak ada harga yang cocok untuk Anda!');
-          console.log(user.employment);
-          console.log(prices);
-        }
-
-        if (itemToAdd !== undefined) {
-          dispatch(addToCart(itemToAdd));
-          setFeedbackMessage("Added to cart");
-          setOpenFeedback(true);
-        }
-      } else {
-        router.push('/signin')
-      }
-    }
-
-    const handleRemoveFromCartClick = () => {
-      dispatch(removeFromCart(props.specificCourseData.id));
-      setFeedbackMessage("Removed from cart");
-      setOpenFeedback(true);
-    }
-  
-    if (props.hasError) {
-      return <h1>Error - please try another parameter</h1>
-    }
-  
-    if (router.isFallback) {
-        return <h1>Loading...</h1>
-    }
-  
+  const ButtonFeedback = ({ title }: { title: string}) => {
     return (
+      <Snackbar
+        open={openFeedback}
+        autoHideDuration={6000}
+        onClose={() => { setOpenFeedback(false) }}
+        message={feedbackMessage}
+        action={action}
+      />
+    );
+  }
+
+  const handleAddToCartClick = () => {
+    if (isAuthenticated && data) {
+      const prices = data[0].prices;
+      const employmentCategories: any = prices.map((v) => parseInt(Object.keys(v)[0], 10));
+
+      let itemToAdd: Cart | undefined = undefined;
+      if ((user.employment in prices)) { // cek apakah ada kecocokan status karir
+        // dengan tipe harga training
+        const courseSelected: Course = data[0];
+        const selectedPrice = prices[user.employment];
+        itemToAdd = {...courseSelected, price: selectedPrice}
+      } else if ((employmentCategories.includes(7)) || (employmentCategories.includes(2))) { // cek apakah ada harga training
+        // untuk tipe Umum || Karyawan
+        // const courseSelected: Course = course!.find((x) => x.id === query.course as unknown as number)!;
+        const courseSelected: Course = data[0];
+        const selectedPrice = courseSelected.prices.find((x) => x[2]) || courseSelected.prices.find((x) => x[7]);
+        console.log(courseSelected)
+        itemToAdd = {...courseSelected, price: selectedPrice as object}
+      } else if (Object.keys(prices).length === 0) {
+        const courseSelected = data[0];
+        const selectedPrice: object = { 0: 0 };
+        itemToAdd = {...courseSelected, price: selectedPrice}
+      } else {
+        // eslint-disable-next-line no-alert
+        alert('Tidak ada harga yang cocok untuk Anda!');
+        console.log(user.employment);
+        console.log(prices);
+      }
+
+      if (itemToAdd !== undefined) {
+        dispatch(addToCart(itemToAdd));
+        setFeedbackMessage("Added to cart");
+        setOpenFeedback(true);
+      }
+    } else {
+      router.push('/signin')
+    }
+  }
+
+  const handleRemoveFromCartClick = (id: number) => {
+    dispatch(removeFromCart(id));
+    setFeedbackMessage("Removed from cart");
+    setOpenFeedback(true);
+  }
+
+  if (error) return <div>Failed to load data</div>
+  if (isLoading) return <div>Loading...</div>
+  if (!data) return null
+
+  return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container>
@@ -218,7 +171,7 @@ function Details(props: { specificCourseData: courseInterface,
                       <CardMedia 
                         component="img"
                         height="140"
-                        src={`${process.env.NEXT_PUBLIC_BASE_URL}images/course/${props.specificCourseData.link}`}
+                        src={`${process.env.NEXT_PUBLIC_BASE_URL}images/course/${data[0].image}`}
                         alt="green iguana"
                       />
                       <CardContent>
@@ -234,7 +187,7 @@ function Details(props: { specificCourseData: courseInterface,
                             gutterBottom
                             variant="h5"
                           >
-                            {props.specificCourseData.name}
+                            {data[0].name}
                           </Typography>
                         </Box>
                       </CardContent>
@@ -249,13 +202,13 @@ function Details(props: { specificCourseData: courseInterface,
                 >
                   <Card>
                     <CardHeader 
-                      subheader={props.specificCourseData.instructor}
-                      title={props.specificCourseData.name}
+                      subheader={data[0].instructor}
+                      title={data[0].name}
                     />
                     <Divider />
                     <CardContent>
                       <Typography>
-                        {props.specificCourseData.description}
+                        {data[0].shortDetail}
                       </Typography>
                     </CardContent>
                     <Divider />
@@ -265,7 +218,7 @@ function Details(props: { specificCourseData: courseInterface,
                       </Button>
                       {
                         isThisCourseInCart ?
-                        <Button size="small" color="primary" onClick={ () => { handleRemoveFromCartClick() }}>
+                        <Button size="small" color="primary" onClick={ () => { handleRemoveFromCartClick(data[0].id) }}>
                           Remove from cart
                         </Button> :
                         <Button size="small" color="primary" onClick={ () => { handleAddToCartClick() }}>
@@ -283,6 +236,4 @@ function Details(props: { specificCourseData: courseInterface,
       </Container>
     </ThemeProvider>
     )
-  }
-  
-  export default Details;
+}
