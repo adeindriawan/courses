@@ -70,9 +70,11 @@ const appSlice = createSlice({
     builder.addMatcher(
       api.endpoints.login.matchFulfilled,
       (state, { payload }) => {
-        state.token = payload.data.auth.accessToken;
-        state.authenticated = true;
-        state.user = payload.data.user;
+        if (payload.status === 'success') {
+          state.token = payload.data.auth.accessToken;
+          state.authenticated = true;
+          state.user = payload.data.user;
+        }
       }
     )
   }

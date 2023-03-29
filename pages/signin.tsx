@@ -1,16 +1,21 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import { 
+  Avatar,
+  Backdrop,
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Snackbar,
+  TextField,
+  Typography
+ } from '@mui/material';
 import Link from 'next/link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLoginMutation } from '../stores/api';
 import { useRouter } from 'next/router';
@@ -19,16 +24,42 @@ import Copyright from '../components/Copyirght';
 const theme = createTheme();
 
 export default function SignIn() {
+  const [feedbackMessage, setFeedbackMessage] = React.useState('');
   const router = useRouter();
-  const [login, { isLoading, data, error }] = useLoginMutation();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [login, { isLoading }] = useLoginMutation();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get('email')
     const password = data.get('password')
-    login({ email, password});
-    router.push('/catalog');
+
+    try {
+      const response = await login({ email, password}).unwrap();
+
+      if (response.status === 'success') {
+        setFeedbackMessage(`Login berhasil, Anda akan diarahkan ke halaman Catalog.`);
+        setTimeout(() => {
+          router.push('/catalog');  
+        }, 3000);
+      } else {
+        setFeedbackMessage(`${response.description[0]}`);
+      }
+    } catch (error) {
+      setFeedbackMessage(`Ada masalah pada saat login. Cobalah beberapa saat lagi.`)
+      console.log(error)
+    }
   };
+
+  const ButtonFeedback = ({ title }: { title: string}) => {
+    return (
+      <Snackbar
+        open={feedbackMessage != ''}
+        autoHideDuration={4000}
+        onClose={() => { setFeedbackMessage('') }}
+        message={feedbackMessage}
+      />
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -85,18 +116,25 @@ export default function SignIn() {
             <Grid container>
               <Grid item xs>
                 <Link href="#">
-                  Forgot password?
+                  Lupa kata sandi?
                 </Link>
               </Grid>
               <Grid item>
                 <Link href="/signup">
-                  {"Don't have an account? Sign Up"}
+                  {"Belum punya akun? daftar"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isLoading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <ButtonFeedback title={feedbackMessage} />
       </Container>
     </ThemeProvider>
   );
