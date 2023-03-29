@@ -215,7 +215,7 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="Saya ingin mendapatkan info, promosi maupun program-program terbaru lewat email."
                 />
               </Grid>
             </Grid>
@@ -225,12 +225,12 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Daftar
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signin">
-                  Already have an account? Sign in
+                  Sudah punya akun? Masuk
                 </Link>
               </Grid>
             </Grid>

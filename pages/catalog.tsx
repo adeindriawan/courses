@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { 
+  Backdrop,
   CircularProgress,
   Container,
   CssBaseline,
@@ -37,28 +38,17 @@ export default function Catalog() {
   ];
   const { 
     data,
-    isLoading,
-    isError,
-    isSuccess,
-    error 
+    isLoading
   } = useGetCoursesQuery();
-  
-  let content;
-
-  if (isLoading) {
-    content = <CircularProgress />
-  } else if (isSuccess) {
-    content = data.map((c: Course) => (
-      <Grid item key={c.id} xs={12} sm={6} md={4}>
-        <CourseCard id={c.id} name={c.name} instructor={c.instructor} prices={c.prices} startDate={c.startDate} endDate={c.endDate} shortDetail={c.shortDetail} image={c.image} />
-      </Grid>
-    ))
-  } else if (isError) {
-    content = <div>{error.toString()}</div>
-  }
   
   return (
     <ThemeProvider theme={theme}>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <CssBaseline />
       <Container>
         <Header title="Courses" sections={sections} />
@@ -67,7 +57,13 @@ export default function Catalog() {
           <Container sx={{ py: 8 }} maxWidth="md">
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {content}
+              {
+                data && data.map((c: Course) => (
+                  <Grid item key={c.id} xs={12} sm={6} md={4}>
+                    <CourseCard id={c.id} name={c.name} instructor={c.instructor} prices={c.prices} startDate={c.startDate} endDate={c.endDate} shortDetail={c.shortDetail} image={c.image} />
+                  </Grid>
+                ))
+              }
             </Grid>
           </Container>
         </main>
