@@ -1,22 +1,25 @@
 import * as React from 'react';
 import {
+  Avatar,
+  Backdrop,
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  Container,
+  CssBaseline,
   FormControl,
+  FormControlLabel,
   FormLabel,
+  Grid,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Snackbar,
+  TextField,
+  Typography
 } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from 'next/link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRegisterMutation } from '../stores/api';
 import { useRouter } from 'next/router';
@@ -24,23 +27,64 @@ import Copyright from '../components/Copyirght';
 
 const theme = createTheme();
 
+interface NewUser {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  employment: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
 export default function SignUp() {
-  const [register, { isLoading, data, error }] = useRegisterMutation();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [feedbackMessage, setFeedbackMessage] = React.useState('');
+  const [register] = useRegisterMutation();
   const router = useRouter();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    register({
-      fname: data.get('firstName'),
-      lname: data.get('lastName'),
-      phone: data.get('phone'),
-      employment: data.get('employment'),
-      email: data.get('email'),
-      password: data.get('password'),
-      password_confirmation: data.get('password')
-    });
-    router.push('/signin');
+    setIsLoading(true);
+    const formData = new FormData(event.currentTarget);
+    const user = {
+      fname: formData.get('firstName'),
+      lname: formData.get('lastName'),
+      phone: formData.get('phone'),
+      employment: formData.get('employment'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      password_confirmation: formData.get('password')
+    }
+
+    try {
+      const response = await register(user).unwrap();
+
+      if (response.status == 'success') {
+        setIsLoading(false)
+        setFeedbackMessage(`Registrasi berhasil, Anda akan diarahkan ke halaman Login`)
+        setTimeout(() => {
+          router.push('/signin')
+        }, 3000);
+      } else {
+        setFeedbackMessage(response.description[0])
+        setIsLoading(false)
+      }
+    } catch (error) {
+      setFeedbackMessage(`Ada masalah pada saat registrasi. Coba beberapa saat lagi.`)
+      setIsLoading(false)
+    }
   };
+
+  const ButtonFeedback = ({ title }: { title: string}) => {
+    return (
+      <Snackbar
+        open={feedbackMessage != ''}
+        autoHideDuration={4000}
+        onClose={() => { setFeedbackMessage('') }}
+        message={feedbackMessage}
+      />
+    );
+  }
 
   const [value, setValue] = React.useState('');
   const employment = '';
@@ -81,7 +125,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="Nama depan"
                   autoFocus
                 />
               </Grid>
@@ -90,7 +134,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="lastName"
-                  label="Last Name"
+                  label="Nama belakang"
                   name="lastName"
                   autoComplete="family-name"
                 />
@@ -100,7 +144,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="phone"
-                  label="Phone number"
+                  label="No HP/WA"
                   name="phone"
                   autoComplete="phone"
                 />
@@ -152,7 +196,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Alamat email"
                   name="email"
                   autoComplete="email"
                 />
@@ -162,7 +206,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Kata sandi"
                   type="password"
                   id="password"
                   autoComplete="new-password"
@@ -194,6 +238,13 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ButtonFeedback title={feedbackMessage} />
     </ThemeProvider>
   );
 }
