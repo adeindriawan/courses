@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Alert,
+  Backdrop,
   Box,
   Button,
   CircularProgress,
@@ -111,6 +112,12 @@ export default function Checkout() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <CssBaseline />
       <Container>
         <Header title="TSA Courses" sections={sections} />
@@ -127,20 +134,18 @@ export default function Checkout() {
           </Stepper>
           {activeStep === steps.length ? (
             <React.Fragment>
-              {isLoading ? (
-                <CircularProgress />
-              ) : (
-                <>
-                  <Typography variant="h5" gutterBottom>
-                    Thank you for your order.
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    {`Your virtual account is ${data.data.VA.account_number}. We have emailed your order
-                    confirmation, and will send you an update when your order has
-                    shipped.`}
-                  </Typography>
-                </>
-              )}
+              {
+              data && 
+              <>
+                <Typography variant="h5" gutterBottom>
+                  Thank you for your order.
+                </Typography>
+                <Typography variant="subtitle1">
+                  {`Virtual account Anda adalah: ${data.data.VA.account_number}. Harap membayar sesuai dengan nominal yang telah Anda
+                  pesan ke VA tersebut.`}
+                </Typography>
+              </>
+              }
             </React.Fragment>
           ) : (
             <React.Fragment>
