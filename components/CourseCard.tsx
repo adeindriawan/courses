@@ -55,7 +55,7 @@ type Statuses = {
   [key: number]: string
 }
 
-export default function CourseCard({ id, name, instructor, prices, startDate, endDate, shortDetail, image }: { id: number, name: string, instructor: string, prices: Array<object>; startDate: string, endDate: string, shortDetail: string, image: string }) {
+export default function CourseCard({ id, name, instructor, prices, startDate, endDate, shortDetail, type, image }: { id: number, name: string, instructor: string, prices: Array<object>; startDate: string, endDate: string, shortDetail: string, type: number, image: string }) {
   const [expanded, setExpanded] = React.useState(false);
   const [openFeedback, setOpenFeedback] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
@@ -221,6 +221,8 @@ export default function CourseCard({ id, name, instructor, prices, startDate, en
     7: 'Public'
   };
 
+  const types = ["Online", "Offline", "Livestream"];
+
   const ButtonFeedback = ({ title }: { title: string}) => {
     return (
       <Snackbar
@@ -303,6 +305,8 @@ export default function CourseCard({ id, name, instructor, prices, startDate, en
             ))
             : <Chip label="Free" />
           }
+          <Typography>Type:</Typography>
+          <Typography paragraph>{types[type]}</Typography>
         </CardContent>
       </Collapse>
       <ButtonFeedback title={feedbackMessage} />

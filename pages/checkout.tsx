@@ -27,6 +27,7 @@ import { RootState } from '../stores';
 import { emptyCart } from '../stores/cart';
 import { setCartTotal } from '../stores/app';
 import { useCreateVAMutation } from '../stores/api';
+import Footer from '../components/Footer';
 
 function Copyright() {
   return (
@@ -61,7 +62,6 @@ const theme = createTheme();
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [bankSelectedAlertOpened, setBankSelectedAlertOpened] = React.useState(false);
-  const [VA, setVA] = React.useState("");
   const sections = [
     { title: 'Home', url: '/' },
     { title: 'Catalog', url: '/catalog' },
@@ -120,7 +120,7 @@ export default function Checkout() {
       </Backdrop>
       <CssBaseline />
       <Container>
-        <Header title="TSA Courses" sections={sections} />
+        <Header title="Courses" sections={sections} />
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
             Checkout
@@ -186,7 +186,10 @@ export default function Checkout() {
             </React.Fragment>
           )}
         </Paper>
-        <Copyright />
+        <Footer
+          title="Courses By ITS Tekno Sains"
+          description="A collection of trainings & bootcamps by ITS Tekno Sains"
+        />
       </Container>
     </ThemeProvider>
   );

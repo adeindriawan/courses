@@ -19,6 +19,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../components/Header';
 import { useSelector } from 'react-redux';
 import { RootState } from '../stores';
+import Footer from '../components/Footer';
 
 function Copyright() {
   return (
@@ -45,13 +46,7 @@ function createData(
   return { name, calories, fat, carbs, protein };
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+const types = ["Online", "Offline", "Livestream"];
 
 export default function Cart() {
   const cart = useSelector((state: RootState) => state.cart);
@@ -65,7 +60,7 @@ export default function Cart() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container>
-        <Header title="TSA Courses" sections={sections} />
+        <Header title="Courses" sections={sections} />
         <main>
           {/* Hero unit */}
           <Container sx={{ py: 8 }} maxWidth="md">
@@ -94,7 +89,7 @@ export default function Cart() {
                         <TableCell align="right">{item.id}</TableCell>
                         <TableCell align="right">{item.instructor}</TableCell>
                         <TableCell align="right">{item.startDate}</TableCell>
-                        <TableCell align="right">{item.type}</TableCell>
+                        <TableCell align="right">{types[item.type]}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -114,20 +109,10 @@ export default function Cart() {
           </Container>
         </main>
         {/* Footer */}
-        <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
-          <Typography variant="h6" align="center" gutterBottom>
-            Footer
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            color="text.secondary"
-            component="p"
-          >
-            Something here to give the footer a purpose!
-          </Typography>
-          <Copyright />
-        </Box>
+        <Footer
+          title="Courses By ITS Tekno Sains"
+          description="A collection of trainings & bootcamps by ITS Tekno Sains"
+        />
       </Container>
       {/* End footer */}
     </ThemeProvider>
