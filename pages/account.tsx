@@ -18,7 +18,7 @@ const Account = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container>
-        <Header title="TSA Courses" sections={sections} />
+        <Header title="Courses" sections={sections} />
         <main>
           <Box
             component="main"
@@ -32,7 +32,7 @@ const Account = () => {
                 sx={{ mb: 3 }}
                 variant="h4"
               >
-                Account
+                Akun
               </Typography>
               <Grid
                 container

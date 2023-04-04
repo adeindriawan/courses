@@ -64,7 +64,15 @@ export const api = createApi({
         }
       }),
     }),
+
+    updateUserProfile: builder.mutation({
+      query: (body) => ({
+        url: `user/profile/update`,
+        method: 'POST',
+        body: body
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useGetCourseDetailsQuery, useCreateVAMutation } = api;
+export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useGetCourseDetailsQuery, useCreateVAMutation, useUpdateUserProfileMutation } = api;
