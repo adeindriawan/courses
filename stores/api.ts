@@ -3,6 +3,13 @@ import { RootState } from './index';
 import { Course, Courses } from './course';
 import { APIURL } from '../config';
 
+interface Response {
+  status: string,
+  data: Array<object>,
+  message: string,
+  description: string
+}
+
 export const api = createApi({
   reducerPath: 'api',
 
@@ -72,7 +79,15 @@ export const api = createApi({
         body: body
       }),
     }),
+
+    orderHistory: builder.query<Response, void>({
+      query: () => ({
+        url: `orders/history`
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, useGetCoursesQuery, useGetCourseDetailsQuery, useCreateVAMutation, useUpdateUserProfileMutation } = api;
+export const { useLoginMutation, useRegisterMutation, useGetUsersQuery, 
+              useGetCoursesQuery, useGetCourseDetailsQuery, useCreateVAMutation, 
+              useUpdateUserProfileMutation, useOrderHistoryQuery } = api;

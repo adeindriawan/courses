@@ -27,16 +27,6 @@ import Copyright from '../components/Copyirght';
 
 const theme = createTheme();
 
-interface NewUser {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  employment: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-}
-
 export default function SignUp() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState('');

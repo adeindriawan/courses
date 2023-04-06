@@ -36,16 +36,6 @@ function Copyright() {
 
 const theme = createTheme();
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
 const types = ["Online", "Offline", "Livestream"];
 
 export default function Cart() {

@@ -1,5 +1,5 @@
-import Head from 'next/head';
-import { Box, Container, CssBaseline, Grid, Typography } from '@mui/material';
+import Link from 'next/link';
+import { Box, Button, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../components/Header';
 import { AccountProfile } from '../components/AccountProfile';
@@ -45,6 +45,9 @@ const Account = () => {
                   xs={12}
                 >
                   <AccountProfile />
+                  <Button sx={{ marginTop: 2 }}>
+                    <Link href='/history'>Histori Pembelian</Link>
+                  </Button>
                 </Grid>
                 <Grid
                   item

@@ -4,29 +4,14 @@ import {
   CircularProgress,
   Container,
   CssBaseline,
-  Grid,
-  Typography
+  Grid
  } from '@mui/material';
-import Link from 'next/link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../components/Header';
 import CourseCard from '../components/CourseCard';
 import { useGetCoursesQuery } from '../stores/api';
 import { Course } from '../stores/course';
 import Footer from '../components/Footer';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="/">
-        TSA Courses
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const theme = createTheme();
 
