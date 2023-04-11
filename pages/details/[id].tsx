@@ -10,6 +10,7 @@ import {
   CardContent,
   CardHeader, 
   CardMedia,
+  Chip,
   CircularProgress,
   Container, 
   Divider, 
@@ -136,6 +137,22 @@ const CourseDetails: NextPageWithLayout = () => {
   }
   if (!data) return null
 
+  type Statuses = {
+    [key: number]: string
+  }
+
+  const statuses: Statuses = {
+    1: 'Student/College student',
+    2: 'Employee/Professional',
+    3: 'Freelancer/Self-employed',
+    4: 'Unemployed/Jobseeker',
+    5: 'Teacher/Lecturer/Academics',
+    6: 'Manager/Director/Enterpreneur',
+    7: 'Public'
+  };
+
+  const types = ["Online", "Offline", "Livestream"];
+
   return (
     <>
       <Box
@@ -206,6 +223,26 @@ const CourseDetails: NextPageWithLayout = () => {
                   <Typography>
                     {data[0].shortDetail}
                   </Typography>
+                  <Typography>
+                    Date
+                  </Typography>
+                  <Typography>
+                    {data[0].startDate}
+                  </Typography>
+                  <Typography>
+                    Price
+                  </Typography>
+                  {
+                    (data[0].prices.length > 0)
+                    ? data[0].prices.map((v, i) => (
+                      <Typography key={i}>
+                        {`${statuses[Object.keys(v) as unknown as number]}: Rp${Object.values(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`}
+                      </Typography>
+                    ))
+                    : <Chip label="Free" />
+                  }
+                  <Typography>Type:</Typography>
+                  <Typography paragraph>{types[data[0].type]}</Typography>
                 </CardContent>
                 <Divider />
                 <CardActions>
