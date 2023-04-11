@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/router'
-import { 
+import {
+  Backdrop, 
   Box,
   Button, 
   Card,
@@ -9,31 +10,23 @@ import {
   CardContent,
   CardHeader, 
   CardMedia,
+  CircularProgress,
   Container, 
-  CssBaseline,
   Divider, 
   Grid,
   IconButton,
   Snackbar, 
   Typography } from '@mui/material'
 import { useGetCourseDetailsQuery } from '../../stores/api'
-import Header from '../../components/Header';
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { Close as CloseIcon } from '@mui/icons-material'
 import { RootState } from '../../stores'
 import { useDispatch, useSelector } from 'react-redux'
-import { Course, Courses } from '../../stores/course'
+import { Course } from '../../stores/course'
 import { Cart, removeFromCart, addToCart } from '../../stores/cart'
+import { NextPageWithLayout } from '../_app';
+import Layout from '../../components/Layout';
 
-const theme = createTheme();
-
-const sections = [
-  { title: 'Home', url: '/' },
-  { title: 'Catalog', url: '/catalog' },
-  { title: 'About', url: '/about' },
-];
-
-export default function CoursePage() {
+const CourseDetails: NextPageWithLayout = () => {
   const [openFeedback, setOpenFeedback] = React.useState(false);
   const [feedbackMessage, setFeedbackMessage] = React.useState("");
   const { query } = useRouter()
@@ -48,8 +41,6 @@ export default function CoursePage() {
   const cart = state.cart;
   const isAuthenticated = state.app.authenticated;
   const user = state.app.user;
-  console.log(data);
-
   const isThisCourseInCart = cart.find(item => item.id == query.id as unknown as number);
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -133,107 +124,120 @@ export default function CoursePage() {
   }
 
   if (error) return <div>Failed to load data</div>
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) {
+    return (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
   if (!data) return null
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Container>
-        <Header title="TSA Courses" sections={sections} />
-        <main>
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              py: 8
-            }}
+    <>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8
+        }}
+      >
+        <Container maxWidth="lg">
+          <Typography
+            sx={{ mb: 3 }}
+            variant="h4"
           >
-            <Container maxWidth="lg">
-              <Typography
-                sx={{ mb: 3 }}
-                variant="h4"
-              >
-                Details
-              </Typography>
-              <Grid
-                container
-                spacing={3}
-              >
-                <Grid
-                  item
-                  lg={4}
-                  md={6}
-                  xs={12}
-                >
-                  <Card>
-                    <CardActionArea>
-                      <CardMedia 
-                        component="img"
-                        height="140"
-                        src={`${process.env.NEXT_PUBLIC_BASE_URL}images/course/${data[0].image}`}
-                        alt="green iguana"
-                      />
-                      <CardContent>
-                        <Box
-                          sx={{
-                            alignItems: 'center',
-                            display: 'flex',
-                            flexDirection: 'column'
-                          }}
-                        >
-                          <Typography
-                            color="textPrimary"
-                            gutterBottom
-                            variant="h5"
-                          >
-                            {data[0].name}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-                <Grid
-                  item
-                  lg={8}
-                  md={6}
-                  xs={12}
-                >
-                  <Card>
-                    <CardHeader 
-                      subheader={data[0].instructor}
-                      title={data[0].name}
-                    />
-                    <Divider />
-                    <CardContent>
-                      <Typography>
-                        {data[0].shortDetail}
+            Details
+          </Typography>
+          <Grid
+            container
+            spacing={3}
+          >
+            <Grid
+              item
+              lg={4}
+              md={6}
+              xs={12}
+            >
+              <Card>
+                <CardActionArea>
+                  <CardMedia 
+                    component="img"
+                    height="140"
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL}images/course/${data[0].image}`}
+                    alt="green iguana"
+                  />
+                  <CardContent>
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                    >
+                      <Typography
+                        color="textPrimary"
+                        gutterBottom
+                        variant="h5"
+                      >
+                        {data[0].name}
                       </Typography>
-                    </CardContent>
-                    <Divider />
-                    <CardActions>
-                      <Button size="small" color="primary">
-                        Share
-                      </Button>
-                      {
-                        isThisCourseInCart ?
-                        <Button size="small" color="primary" onClick={ () => { handleRemoveFromCartClick(data[0].id) }}>
-                          Remove from cart
-                        </Button> :
-                        <Button size="small" color="primary" onClick={ () => { handleAddToCartClick() }}>
-                          Add to cart
-                        </Button>
-                      }
-                    </CardActions>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Container>
-          </Box>
-        </main>
-        <ButtonFeedback title={feedbackMessage} />
-      </Container>
-    </ThemeProvider>
-    )
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid
+              item
+              lg={8}
+              md={6}
+              xs={12}
+            >
+              <Card>
+                <CardHeader 
+                  subheader={data[0].instructor}
+                  title={data[0].name}
+                />
+                <Divider />
+                <CardContent>
+                  <Typography>
+                    {data[0].shortDetail}
+                  </Typography>
+                </CardContent>
+                <Divider />
+                <CardActions>
+                  <Button size="small" color="primary">
+                    Share
+                  </Button>
+                  {
+                    isThisCourseInCart ?
+                    <Button size="small" color="primary" onClick={ () => { handleRemoveFromCartClick(data[0].id) }}>
+                      Remove from cart
+                    </Button> :
+                    <Button size="small" color="primary" onClick={ () => { handleAddToCartClick() }}>
+                      Add to cart
+                    </Button>
+                  }
+                </CardActions>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+      <ButtonFeedback title={feedbackMessage} />
+    </>
+  );
 }
+
+CourseDetails.getLayout = function getLayout(page: React.ReactElement) {
+  return (
+    <Layout>
+      {page}
+    </Layout>
+  );
+}
+
+export default CourseDetails;

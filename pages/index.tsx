@@ -1,18 +1,9 @@
 import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Header from '../components/Header';
 import MainFeatured from '../components/MainFeatured';
 import Featured from '../components/Featured';
-import Footer from '../components/Footer';
-
-const sections = [
-  { title: 'Home', url: '/' },
-  { title: 'Catalog', url: '/catalog' },
-  { title: 'About', url: '/about' },
-];
+import { NextPageWithLayout } from './_app';
+import Layout from '../components/Layout';
 
 const mainFeaturedPost = {
   title: 'Courses by ITS Tekno Sains',
@@ -42,27 +33,25 @@ const featuredPosts = [
   },
 ];
 
-const theme = createTheme();
-
-export default function Blog() {
+const Home: NextPageWithLayout = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Container maxWidth="lg">
-        <Header title="Courses" sections={sections} />
-        <main>
-          <MainFeatured post={mainFeaturedPost} />
-          <Grid container spacing={4}>
-            {featuredPosts.map((post) => (
-              <Featured key={post.title} post={post} />
-            ))}
-          </Grid>
-        </main>
-      </Container>
-      <Footer
-        title="Courses By ITS Tekno Sains"
-        description="A collection of trainings & bootcamps by ITS Tekno Sains"
-      />
-    </ThemeProvider>
+    <>
+      <MainFeatured post={mainFeaturedPost} />
+      <Grid container spacing={4}>
+        {featuredPosts.map((post) => (
+          <Featured key={post.title} post={post} />
+        ))}
+      </Grid>
+    </>
   );
 }
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return (
+    <Layout>
+      {page}
+    </Layout>
+  );
+};
+
+export default Home;
