@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import Image from 'next/image';
 
 interface MainFeaturedProps {
   post: {
@@ -32,7 +33,7 @@ export default function MainFeatured(props: MainFeaturedProps) {
       }}
     >
       {/* Increase the priority of the hero background image */}
-      {<img style={{ display: 'none' }} src={post.image} alt={post.imageText} />}
+      {<Image style={{ display: 'none' }} width={500} height={300} src={post.image} alt={post.imageText} />}
       <Box
         sx={{
           position: 'absolute',

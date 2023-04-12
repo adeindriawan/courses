@@ -1,69 +1,40 @@
 import * as React from 'react'
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
+import { 
+  Paper,
+  Typography
+ } from '@mui/material'
 import styles from '../styles/Home.module.css'
 import type { NextPageWithLayout } from './_app'
 import Layout from '../components/Layout'
 
 const About: NextPageWithLayout = () => {
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Go to <Link href='/'>Home</Link> page!
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
+    <>
+      <Typography variant="h4" align="center" gutterBottom>Upgrade Your Career in Just a Few Clicks</Typography>
+      <Paper elevation={5}>
+        <Typography mt={5} sx={{ padding: 2 }}>
+          Looking to level up your skills and take your career to the next level? Look no further than Courses,
+          the premier platform for signing up for trainings and bootcamps. With our extensive selection of courses,
+          you&apos;re sure to find something that fits your needs and interests.
+        </Typography>
+      </Paper>
+      <Paper elevation={5}>
+        <Typography mt={1} sx={{ padding: 2 }}>
+        Whether you&apos;re looking to learn a new programming language, improve your leadership skills, 
+        or dive into the world of digital marketing, Courses has you covered. 
+        Our expert instructors bring years of experience and knowledge to each course, 
+        ensuring that you receive the highest quality education possible.
+        </Typography>
+      </Paper>
+      <Paper elevation={5}>
+        <Typography mt={1} sx={{ padding: 2 }}>
+        But we don&apos;t just stop at the course material itself. Courses also offers a supportive community of fellow learners, 
+        allowing you to connect with like-minded individuals and potentially even find new job opportunities. 
+        Plus, our user-friendly platform makes signing up and accessing course materials a breeze. 
+        Take the first step towards achieving your goals today with Courses.
+        </Typography>
+      </Paper>
+    </>
   )
 }
 

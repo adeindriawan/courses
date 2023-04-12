@@ -8,7 +8,7 @@ import Layout from '../components/Layout';
 const mainFeaturedPost = {
   title: 'Courses by ITS Tekno Sains',
   description:
-    "Kumpulan pelatihan, bootcamp, serta program-program pengembangan diri lainnya dari PT ITS Tekno Sains.",
+    "Transform Yourself into an Expert with the Best Training Programs on Courses!",
   image: '/banner.jpg',
   imageText: 'main image description',
   linkText: 'Continue reading…',
@@ -16,18 +16,18 @@ const mainFeaturedPost = {
 
 const featuredPosts = [
   {
-    title: 'Featured post',
-    date: 'Nov 12',
+    title: 'Select the program',
+    date: 'May 23',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'Choose the training, course or bootcamp that interests you.',
     image: '/banner.jpg',
     imageLabel: 'Image Text',
   },
   {
-    title: 'Post title',
-    date: 'Nov 11',
+    title: 'Easy payment',
+    date: 'Jul 03',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'Pay from the bank account of your choice. No confirmation needed.',
     image: '/banner.jpg',
     imageLabel: 'Image Text',
   },
