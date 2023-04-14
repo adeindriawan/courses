@@ -9,6 +9,7 @@ export interface Course {
   id: number,
   name: string,
   shortDetail: string,
+  detail?: string,
   instructor: string,
   prices: Array<CoursePriceLevel>,
   startDate: string,

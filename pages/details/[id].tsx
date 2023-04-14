@@ -243,6 +243,8 @@ const CourseDetails: NextPageWithLayout = () => {
                   }
                   <Typography>Type:</Typography>
                   <Typography paragraph>{types[data[0].type]}</Typography>
+                  <Typography>Detail:</Typography>
+                  <Typography>{data[0].detail}</Typography>
                 </CardContent>
                 <Divider />
                 <CardActions>
